@@ -1,3 +1,5 @@
+## Updated to work on Python3.5
+
 ## Fighting Fake News: Image Splice Detection via Learned Self-Consistency
 ### [[paper]](https://arxiv.org/pdf/1805.04096.pdf) [[website]](https://minyoungg.github.io/selfconsistency/)
 
