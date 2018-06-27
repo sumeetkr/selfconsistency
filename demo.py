@@ -381,7 +381,7 @@ if __name__ == '__main__':
     assert os.path.exists(cfg.im_path)
     
     ckpt_path = './ckpt/exif_final/exif_final.ckpt'
-    exif_demo = Demo(ckpt_path=ckpt_path, use_gpu=0, quality=3.0, num_per_dim=30)
+    exif_demo = Demo(ckpt_path=ckpt_path, use_gpu=1, quality=3.0, num_per_dim=30)
         
     # Need to run multipe images
     for file in os.listdir(cfg.im_path):
