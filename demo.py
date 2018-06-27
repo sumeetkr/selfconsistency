@@ -375,33 +375,40 @@ if __name__ == '__main__':
     plt.switch_backend('agg')
     parser = argparse.ArgumentParser()
     parser.add_argument("--im_path", type=str, help="path_to_image")
+    parser.add_argument("--results_path", type=str, help="path_to_results")
     cfg = parser.parse_args()
     
     assert os.path.exists(cfg.im_path)
     
-    imid = cfg.im_path.split('/')[-1].split('.')[0]
-    save_path = os.path.join('./images', imid + '_result.png')
-    
     ckpt_path = './ckpt/exif_final/exif_final.ckpt'
     exif_demo = Demo(ckpt_path=ckpt_path, use_gpu=0, quality=3.0, num_per_dim=30)
-    
-    print('Running image %s' % cfg.im_path)
-    ms_st = time.time()
-    im_path = cfg.im_path
-    im, res = exif_demo(im_path, dense=True)
-    print('MeanShift run time: %.3f' % (time.time() - ms_st))
-    
-    plt.subplots(figsize=(16, 8))
-    plt.subplot(1, 3, 1)
-    plt.title('Input Image')
-    plt.imshow(im)
-    plt.axis('off')
+        
+    # Need to run multipe images
+    for file in os.listdir(cfg.im_path):
+        image_path = os.path.join(cfg.im_path, file)
+        # results_path = os.path.join(cfg.results_path, file)
 
-    plt.subplot(1, 3, 2)
-    plt.title('Cluster w/ MeanShift')
-    plt.axis('off')
-    if np.mean(res > 0.5) > 0.5:
-        res = 1.0 - res
-    plt.imshow(res, cmap='jet', vmin=0.0, vmax=1.0)
-    plt.savefig(save_path)
-    print('Result saved %s' % save_path)
+        imid = image_path.split('/')[-1].split('.')[0]
+        save_path = os.path.join(cfg.results_path, imid + '_result.png')
+        
+        
+        print('Running image %s' % image_path)
+        ms_st = time.time()
+        im_path = image_path
+        im, res = exif_demo(im_path, dense=True)
+        print('MeanShift run time: %.3f' % (time.time() - ms_st))
+        
+        plt.subplots(figsize=(16, 8))
+        plt.subplot(1, 3, 1)
+        plt.title('Input Image')
+        plt.imshow(im)
+        plt.axis('off')
+
+        plt.subplot(1, 3, 2)
+        plt.title('Cluster w/ MeanShift')
+        plt.axis('off')
+        if np.mean(res > 0.5) > 0.5:
+            res = 1.0 - res
+        plt.imshow(res, cmap='jet', vmin=0.0, vmax=1.0)
+        plt.savefig(save_path)
+        print('Result saved %s' % save_path)
